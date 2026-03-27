@@ -1,0 +1,74 @@
+#1. Top 10 High-Value Clients
+SELECT client_id, SUM(current_value) AS total_value
+FROM investments
+GROUP BY client_id
+ORDER BY total_value DESC
+LIMIT 10;
+
+#2. Profit & Loss by Client
+SELECT client_id,
+       SUM(current_value - total_investment) AS profit_loss
+FROM investments
+GROUP BY client_id
+ORDER BY profit_loss DESC;
+
+#3. Investment by Asset Type
+SELECT asset_type,
+       SUM(total_investment) AS total_investment
+FROM investments
+GROUP BY asset_type
+ORDER BY total_investment DESC;
+
+#4. Risk Distribution
+SELECT risk_level,
+       COUNT(*) AS total_investments,
+       SUM(current_value) AS value
+FROM investments
+GROUP BY risk_level;
+
+#5. City-wise Investment
+SELECT city,
+       SUM(total_investment) AS investment
+FROM investments
+GROUP BY city
+ORDER BY investment DESC;
+
+#6. Monthly Growth Trend
+SELECT DATE_TRUNC('month', date) AS month,
+       SUM(current_value) AS total_value
+FROM investments
+GROUP BY month
+ORDER BY month;
+
+#7. Provider Performance
+SELECT provider,
+       SUM(current_value) AS total_value,
+       SUM(current_value - total_investment) AS profit
+FROM investments
+GROUP BY provider
+ORDER BY profit DESC;
+
+#8. Customer Segmentation (Basic)
+SELECT 
+    CASE 
+        WHEN age < 30 THEN 'Young'
+        WHEN age BETWEEN 30 AND 50 THEN 'Mid-age'
+        ELSE 'Senior'
+    END AS age_group,
+    COUNT(*) AS clients
+FROM clients
+GROUP BY age_group;
+
+#9. Currency Distribution
+SELECT currency_type,
+       SUM(total_investment) AS investment
+FROM investments
+GROUP BY currency_type;
+
+#10. Underperforming Clients
+SELECT client_id,
+       SUM(current_value - total_investment) AS loss
+FROM investments
+GROUP BY client_id
+HAVING SUM(current_value - total_investment) < 0
+ORDER BY loss;
